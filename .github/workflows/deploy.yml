@@ -1,0 +1,22 @@
+name: Otomatik Guncelleme
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+    - name: Kodu Cek
+      uses: actions/checkout@v3
+
+    - name: Docker Insa Et
+      run: docker build -t benim-sitem:v3 .
+
+    - name: Eskiyi Temizle
+      run: docker rm -f web-kutusu || true
+
+    - name: Yenisini Baslat
+      run: docker run -d -p 80:80 --name web-kutusu benim-sitem:v3
